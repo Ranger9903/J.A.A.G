@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>use ganga.js to create a 3D model</title>
+
+    <script SRC="https://unpkg.com/ganja.js"></script>
+  </head>
+  <body>
+    <script>
+      //Clifford algebra for a 3D vector space (Euclidian Projective GA)
+      var A = Algebra(3,0,1,()=>{
+
+        //points and RK4 integrator
+        var point = (x,y,z)=>!(1e0+x*1e1+y*1e2+z*1e3),
+            RK4 = (f,y,h)=>{ var k1=f(y), k2=f(y+0.5*h*k1), k3=f(y+0.5*h*k2), k4=f(y+h*k3); return  y+(h/3)*(k2+k3+(k1+k4)*0.5); };
+
+        //cube example
+        var mass  = 1, size  = [0.6,2,1],
+      cubeB = [...Array(8)].map((x,i)=>point.apply(this,size.map((s,j)=>s*(((i>>j)%2)-0.5)))),
+      cubeF = [[0,1,2],[1,2,3],[4,5,6],[5,6,7],[0,1,4],[4,5,1],[2,6,7],[2,3,7],[0,4,2],[4,2,6],[1,5,7],[1,3,7]].map(x=>x.map(i=>cubeB[i])),
+      cube  = {data:cubeF, transform:1+1e0};
+
+      // Graph the 3D items
+      document.body.appendChild(this.graph(()=>{
+        // Render the cube
+          return [0xCC00FF,cube];
+        },{animate:true,gl:true}));
+      });
+    </script>
+  </body>
+</html>
